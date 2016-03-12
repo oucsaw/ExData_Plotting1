@@ -3,8 +3,9 @@
 #
 # Notes: Our overall goal here is simply to examine how household
 # energy usage varies over a 2-day period in February, 2007. Our task
-# is to reconstruct a line graph showing how the three Energy sub
-# meters changes over the days between 2007-02-01 between 2007-02-2
+# is to reconstruct four line graphs showing global active power,
+# voltage, energy sub meters and global reactive power changes over
+# the days between 2007-02-01 between 2007-02-2
 #
 # Firstly, ensure that the libraries graphics (for hist) and
 # grDevices (so we can save these as png files) are loaded
@@ -78,50 +79,18 @@ assignmentDataset$DateTime <- sapply(dateTime, convertDateTime)
 # Cleanup some unused variables:
 rm(dateTime)
 
-# Now onto the plot; firstly we open the PNG file device called
-# 'plot3.png' sized as 480x480  (the default but we specify to
+# Now onto the plots: firstly we open the PNG file device called
+# 'plot4.png' sized as 480x480  (the default but we specify to
 # be certian)
-png(filename='plot3.png', widt = 480, height=480)
+png(filename='plot4.png', widt = 480, height=480)
 
-# Now we create a line plot (type=l) with no x-axis labels (xact=n) as
-# we will add these later. We label the y-axis with
-# 'Energy sub metering' and a blank x-axis label
+# Split the device into 2 rows and 2 columns using
+# mfrow (so rows will fill first):
+par(mfrow = c(2,2))
 
-plot(assignmentDataset$DateTime,
-     assignmentDataset$Sub_metering_1,
-     type = 'l',  # A line plot
-     xaxt = 'n',  # Blank x axis 
-     ylab = 'Energy sub metering',
-     xlab='')
-
-# We now add the line for Sub metering 2, colouring it red.
-lines(assignmentDataset$DateTime,
-     assignmentDataset$Sub_metering_2,
-     type = 'l',
-     col = 'red' )
-
-# We now add the line for Sub metering 3, colouring it blue.
-lines(assignmentDataset$DateTime,
-     assignmentDataset$Sub_metering_3,
-     type = 'l',
-     col = 'blue' )
-
-# Now, we create a legend in the top right hand corner
-legend('topright',
-       legend =  c('Sub_metering_1',
-                   'Sub_metering_2',
-                   'Sub_metering_3' ),
-       col    =  c( 'black', 'red', 'blue' ),
-       lwd    = 1 )
-
-
-
-# We label the x-axis using the 'axis command with side = 1 (for the
-# x-axis. We label at three points: the first, the middle and the last
-# of our points, using the label of the abreviated weekday.
-#
-# Firstly, let us generate the two vectors: one for the labels
-# (xlabels) and one containing the points on the x-axis to mark:
+# In advance of time setup the x-axis labels which are the same on all
+# 4 graphs: generate the two vectors: one for the labels (xlabels) and
+# one containing the points on the x-axis to mark:
 # we create these two vectos using the data at positions
 # 1 (nRows / 2 + 1) (middle point), and nRows of 
 # the assignmentDataset$DateTime vector
@@ -136,8 +105,71 @@ convertTimeToWeekday <- function(time) {
 
 xlabels <- sapply(xlabels, convertTimeToWeekday)
 
-# Then we label the axis:
+
+# Plot 1 is the same as that in plot2.R - see that file for further 
+# comments:
+plot(assignmentDataset$DateTime,
+     assignmentDataset$Global_active_power,
+     type = 'l',  # A line plot
+     xaxt = 'n',  # Blank x axis 
+     ylab = 'Global Active Power',
+     xlab='')
+
+# Label the axis:
 axis(1, at = xMarks, labels = xlabels)
+
+# Plot 2 is new: we plot voltage against time
+plot(assignmentDataset$DateTime,
+     assignmentDataset$Voltage,
+     type = 'l',  # A line plot
+     xaxt = 'n',  # Blank x axis 
+     ylab = 'Voltage',
+     xlab='datetime')
+
+# Label the axis:
+axis(1, at = xMarks, labels = xlabels)
+
+# Plot 3 is nearly the same as that in plot3.R; this time the legend 
+# has no border - howerver see that file for further comments:
+
+# Plot the first sub meter:
+plot(assignmentDataset$DateTime,
+     assignmentDataset$Sub_metering_1,
+     type = 'l',  # A line plot
+     xaxt = 'n',  # Blank x axis 
+     ylab = 'Energy sub metering',
+     xlab='')
+# add the second sub meter:
+lines(assignmentDataset$DateTime,
+     assignmentDataset$Sub_metering_2,
+     type = 'l',
+     col = 'red' )
+# add the third sub meter:
+lines(assignmentDataset$DateTime,
+     assignmentDataset$Sub_metering_3,
+     type = 'l',
+     col = 'blue' )
+# Now, we create a legend in the top right hand corner
+legend('topright',
+       legend =  c('Sub_metering_1',
+                   'Sub_metering_2',
+                   'Sub_metering_3' ),
+       col    =  c( 'black', 'red', 'blue' ),
+       lwd    = 1, 
+       bty = 'n' )
+
+
+# Plot 4 is new: we plot Global reactive power against time
+plot(assignmentDataset$DateTime,
+     assignmentDataset$Global_reactive_power,
+     type = 'l',  # A line plot
+     xaxt = 'n',  # Blank x axis 
+     ylab = 'Global_reactive_power',
+     xlab='datetime')
+
+# Label the axis:
+axis(1, at = xMarks, labels = xlabels)
+
 
 # close the created png device
 dev.off()
