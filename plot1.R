@@ -56,8 +56,10 @@ names(assignmentDataset) <- names(labels)
 # from character vectors into more suitable units, so we omit this
 # conversion
 #
-# Create a png with filename 'plot1.png' and  size 480x480 (the defaults
-# - but we specify them to be certian)
+
+# Now onto the plot; firstly we open the PNG file device called 
+# 'plot1.png' sized as 480x480  (the default but we specify to
+# be certian)
 png(filename='plot1.png', widt = 480, height=480)
 
 # Plot the histogram as one command - we could split this up, but 
